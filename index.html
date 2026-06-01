@@ -5,159 +5,86 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Sopa de Letras</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --cream:     #fdf6ee;
-  --blush:     #e8b4b8;
-  --rose:      #c0616a;
-  --deep:      #6b2737;
-  --gold:      #c9a96e;
-
-  /* pastel grid vars */
-  --border:    #ddb8bc;
-  --surface:   #fef0f1;
-  --accent:    #c0616a;
-  --accent-dim:#f7dde0;
-  --text:      #7a3a42;
-  --muted:     #b88a90;
-  --found-bg:  #fce8ea;
-  --found-color:#a03040;
-  --sel-bg:    #f9d0d4;
-  --sel-color: #8b2535;
+  --cream:#fdf6ee; --blush:#e8b4b8; --rose:#c0616a;
+  --deep:#6b2737; --gold:#c9a96e;
+  --border:#ddb8bc; --surface:#fef0f1;
+  --accent-dim:#f7dde0; --text:#7a3a42; --muted:#b88a90;
+  --found-bg:#f9d0d4; --found-color:#8b2535;
+  --sel-bg:#fce4e6; --sel-color:#a03040;
 }
-
-html, body { height: 100%; }
-
-body {
-  min-height: 100vh;
-  background-color: var(--cream);
+html,body{height:100%;}
+body{
+  min-height:100vh; background-color:var(--cream);
   background-image:
-    radial-gradient(ellipse 80% 60% at 50% 0%,   #f3d5d8 0%, transparent 65%),
-    radial-gradient(ellipse 60% 40% at 10% 100%, #e8c6ca 0%, transparent 55%),
-    radial-gradient(ellipse 50% 35% at 90% 80%,  #f0dde0 0%, transparent 50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 1.5rem;
-  overflow-x: hidden;
-  gap: 2rem;
+    radial-gradient(ellipse 80% 60% at 50% 0%,#f3d5d8 0%,transparent 65%),
+    radial-gradient(ellipse 60% 40% at 10% 100%,#e8c6ca 0%,transparent 55%),
+    radial-gradient(ellipse 50% 35% at 90% 80%,#f0dde0 0%,transparent 50%);
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding:3rem 1.5rem; overflow-x:hidden; gap:1.8rem;
 }
-
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 0;
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
 }
-
-header {
-  text-align: center;
-  position: relative; z-index: 1;
+header{text-align:center; position:relative; z-index:1;}
+.subtitle{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:.85rem; letter-spacing:.3em; color:var(--muted); text-transform:uppercase; margin-bottom:.5rem;}
+h1{font-family:'Playfair Display',serif; font-weight:700; font-size:clamp(1.6rem,5vw,2.8rem); color:var(--deep);}
+.ornament{display:flex; align-items:center; gap:1rem; width:100%; max-width:420px; position:relative; z-index:1;}
+.ornament span{flex:1; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.ornament svg{flex-shrink:0; color:var(--rose);}
+.words-panel{position:relative; z-index:1; display:flex; gap:.7rem; flex-wrap:wrap; justify-content:center; max-width:520px;}
+.word-tag{
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; letter-spacing:.1em;
+  color:var(--muted); border:1px solid var(--border); padding:.25rem .9rem; border-radius:20px;
+  background:var(--surface); transition:all .3s;
 }
-
-.subtitle {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: .85rem;
-  letter-spacing: .3em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-bottom: .5rem;
+.word-tag.done{color:var(--deep); border-color:var(--rose); background:var(--found-bg); text-decoration:line-through;}
+.grid-wrap{
+  position:relative; z-index:1; border:1.5px solid var(--blush);
+  box-shadow:0 0 0 4px var(--accent-dim),0 8px 32px rgba(192,97,106,.12);
+  padding:6px; background:var(--surface); border-radius:6px;
 }
-
-h1 {
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: clamp(1.6rem, 5vw, 2.8rem);
-  color: var(--deep);
-  letter-spacing: -.01em;
-  line-height: 1.15;
+.grid-wrap::before,.grid-wrap::after{content:''; position:absolute; width:16px; height:16px; border-color:var(--gold); border-style:solid;}
+.grid-wrap::before{top:-3px; left:-3px; border-width:2px 0 0 2px;}
+.grid-wrap::after{bottom:-3px; right:-3px; border-width:0 2px 2px 0;}
+.grid{display:grid; grid-template-columns:repeat(10,1fr); border-top:1px solid var(--border); border-left:1px solid var(--border);}
+.cell{
+  border-right:1px solid var(--border); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  width:clamp(32px,6vw,54px); height:clamp(32px,6vw,54px);
+  font-size:clamp(13px,2.2vw,21px); font-weight:700;
+  font-family:'Playfair Display',serif; color:var(--text);
+  cursor:pointer; user-select:none; transition:background .12s,color .12s;
 }
-
-/* ornament */
-.ornament {
-  display: flex; align-items: center; gap: 1rem;
-  width: 100%; max-width: 420px;
-  position: relative; z-index: 1;
+.cell:hover{background:#fce4e6;}
+.cell.selected{background:var(--sel-bg); color:var(--sel-color);}
+.cell.found{background:var(--found-bg); color:var(--found-color); font-style:italic;}
+.cell.selected.found{background:var(--sel-bg); color:var(--sel-color);}
+.controls{display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; position:relative; z-index:1;}
+button{
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; letter-spacing:.08em;
+  color:var(--rose); background:transparent; border:1px solid var(--blush);
+  padding:.45rem 1.4rem; border-radius:2px; cursor:pointer; transition:background .15s,border-color .15s;
 }
-.ornament span { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
-.ornament svg  { flex-shrink: 0; color: var(--rose); }
-
-/* grid wrapper */
-.grid-wrap {
-  position: relative; z-index: 1;
-  border: 1.5px solid var(--blush);
-  box-shadow:
-    0 0 0 4px var(--accent-dim),
-    0 8px 32px rgba(192,97,106,.12);
-  padding: 6px;
-  background: var(--surface);
-  border-radius: 6px;
+button:hover{background:var(--accent-dim); border-color:var(--rose);}
+.status{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; letter-spacing:.06em; color:var(--muted); text-align:center; max-width:480px; line-height:1.6; position:relative; z-index:1;}
+.qr-reveal{
+  display:none; position:relative; z-index:1;
+  flex-direction:column; align-items:center; gap:1rem;
+  background:var(--surface); border:1.5px solid var(--blush);
+  box-shadow:0 0 0 4px var(--accent-dim),0 8px 32px rgba(192,97,106,.12);
+  border-radius:8px; padding:2rem 2.5rem; text-align:center;
+  animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;
 }
-.grid-wrap::before, .grid-wrap::after {
-  content: ''; position: absolute;
-  width: 16px; height: 16px;
-  border-color: var(--gold); border-style: solid;
-}
-.grid-wrap::before { top: -3px; left: -3px;  border-width: 2px 0 0 2px; }
-.grid-wrap::after  { bottom: -3px; right: -3px; border-width: 0 2px 2px 0; }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  border-top: 1px solid var(--border);
-  border-left: 1px solid var(--border);
-}
-
-.cell {
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  width: clamp(32px, 6vw, 54px);
-  height: clamp(32px, 6vw, 54px);
-  font-size: clamp(13px, 2.2vw, 21px);
-  font-weight: 700;
-  font-family: 'Playfair Display', serif;
-  color: var(--text);
-  cursor: pointer; user-select: none;
-  transition: background .12s, color .12s;
-}
-.cell:hover   { background: #fce4e6; }
-.cell.selected{ background: var(--sel-bg);   color: var(--sel-color); }
-.cell.found   { background: var(--found-bg); color: var(--found-color); }
-
-.controls {
-  display: flex; gap: 1rem; flex-wrap: wrap;
-  justify-content: center;
-  position: relative; z-index: 1;
-}
-
-button {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 1rem; letter-spacing: .08em;
-  color: var(--rose); background: transparent;
-  border: 1px solid var(--blush);
-  padding: .45rem 1.4rem;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: background .15s, border-color .15s;
-}
-button:hover { background: var(--accent-dim); border-color: var(--rose); }
-
-.status {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 1rem; letter-spacing: .06em;
-  color: var(--muted);
-  text-align: center;
-  max-width: 480px;
-  line-height: 1.6;
-  position: relative; z-index: 1;
-}
+.qr-reveal.show{display:flex;}
+@keyframes popIn{from{opacity:0;transform:scale(.85);}to{opacity:1;transform:scale(1);}}
+.qr-title{font-family:'Playfair Display',serif; font-weight:700; font-size:1.5rem; color:var(--deep);}
+.qr-sub{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; color:var(--muted); letter-spacing:.06em;}
+#qr-container{padding:12px; background:#fff; border:1px solid var(--blush); border-radius:4px;}
 </style>
 </head>
 <body>
@@ -169,11 +96,11 @@ button:hover { background: var(--accent-dim); border-color: var(--rose); }
 
 <div class="ornament">
   <span></span>
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
-  </svg>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
   <span></span>
 </div>
+
+<div class="words-panel" id="words-panel"></div>
 
 <div class="grid-wrap">
   <div class="grid" id="grid"></div>
@@ -184,7 +111,14 @@ button:hover { background: var(--accent-dim); border-color: var(--rose); }
   <button onclick="resetAll()">Reiniciar</button>
 </div>
 
-<p class="status" id="status">Para el amor de mi vida tini, te amo mucho mi bebita hermosa ♡</p>
+<p class="status">Para el amor de mi vida tini, te amo mucho mi bebita hermosa ♡</p>
+
+<div class="qr-reveal" id="qr-reveal">
+  <div class="qr-title">¡Lo encontraste todo!</div>
+  <div class="qr-sub">Escaneá el QR para tu sorpresa</div>
+  <div id="qr-container"></div>
+  <div class="qr-sub">nuestra playlist ♡</div>
+</div>
 
 <script>
 const rows=[
@@ -200,36 +134,148 @@ const rows=[
   ['J','R','A','S','D','E','I','M','E','S']
 ];
 
-const grid=document.getElementById('grid');
-let selected=new Set();
+const SECRET_WORDS = {
+  'THIAGO': [{r:6,c:0},{r:6,c:1},{r:6,c:2},{r:6,c:3},{r:6,c:4},{r:6,c:5}],
+  'TINI':   [{r:4,c:3},{r:4,c:4},{r:4,c:5},{r:4,c:6}],
+  'MES':    [{r:9,c:7},{r:9,c:8},{r:9,c:9}],
+  'UNION':  [{r:3,c:5},{r:4,c:5},{r:5,c:5},{r:6,c:5},{r:7,c:5}],
+  'LOVE':   [{r:7,c:4},{r:6,c:5},{r:5,c:6},{r:4,c:7}]
+};
 
-rows.forEach((row,r)=>{
-  row.forEach((ch,c)=>{
-    const d=document.createElement('div');
-    d.className='cell';
-    d.textContent=ch;
-    d.id=`c${r}-${c}`;
-    d.addEventListener('click',()=>toggle(d));
-    grid.appendChild(d);
+// Celdas compartidas por múltiples palabras: (6,5) y (4,5)
+// Construimos mapa celda -> palabras que la usan
+const cellWords = {};
+Object.entries(SECRET_WORDS).forEach(([word, coords]) => {
+  coords.forEach(({r,c}) => {
+    const k = r+'-'+c;
+    if(!cellWords[k]) cellWords[k] = [];
+    cellWords[k].push(word);
   });
 });
 
-function toggle(el){
-  if(el.classList.contains('found'))return;
-  el.classList.toggle('selected');
-  if(el.classList.contains('selected'))selected.add(el.id);
-  else selected.delete(el.id);
+const SPOTIFY_URL = 'https://open.spotify.com/playlist/6TmOcYD0xY75mfUYM2YrZS?si=9b38faddd25244d1&pt=6f7ff9a47d978b46bd0652dfc3cb5d8e';
+
+// Combo secreto: fila 10 col 2 (R), fila 9 col 3 (O), fila 2 col 5 (C)
+const SECRET_COMBO = ['9-1', '8-2', '1-4'];
+const SECRET_LINK = 'https://www.youtube.com/?app=desktop&hl=es'; // <-- ponés tu link acá
+
+const gridEl = document.getElementById('grid');
+const wordsPanel = document.getElementById('words-panel');
+let selected = new Set();   // celdas actualmente seleccionadas
+let foundWords = new Set(); // palabras ya encontradas
+let qrGenerated = false;
+
+Object.keys(SECRET_WORDS).forEach(w => {
+  const tag = document.createElement('div');
+  tag.className = 'word-tag';
+  tag.id = 'tag-' + w;
+  tag.textContent = w;
+  wordsPanel.appendChild(tag);
+});
+
+rows.forEach((row,r) => {
+  row.forEach((ch,c) => {
+    const d = document.createElement('div');
+    d.className = 'cell';
+    d.textContent = ch;
+    d.id = `c${r}-${c}`;
+    d.addEventListener('click', () => toggle(d, r, c));
+    gridEl.appendChild(d);
+  });
+});
+
+function toggle(el, r, c) {
+  const key = r+'-'+c;
+  // Si está seleccionada, la desmarcamos (pero mantenemos 'found' si corresponde)
+  if(selected.has(key)) {
+    selected.delete(key);
+    el.classList.remove('selected');
+    // restaurar 'found' si alguna palabra que usa esta celda ya fue encontrada
+    const wordsUsingCell = cellWords[key] || [];
+    const stillFound = wordsUsingCell.some(w => foundWords.has(w));
+    if(stillFound) el.classList.add('found');
+  } else {
+    // La marcamos como seleccionada siempre (aunque sea found)
+    selected.add(key);
+    el.classList.add('selected');
+  }
+  checkWords();
+  checkCombo();
 }
-function clearSelection(){
-  selected.forEach(id=>{
-    const el=document.getElementById(id);
-    if(el&&!el.classList.contains('found'))el.classList.remove('selected');
+
+function checkCombo() {
+  const allSelected = SECRET_COMBO.every(k => selected.has(k));
+  if(allSelected) {
+    SECRET_COMBO.forEach(key => {
+      const [r,c] = key.split('-');
+      document.getElementById('c'+r+'-'+c).classList.remove('selected');
+      selected.delete(key);
+    });
+    if(SECRET_LINK !== 'REEMPLAZA_ESTE_TEXTO_CON_TU_LINK') {
+      window.open(SECRET_LINK, '_blank');
+    } else {
+      alert('¡Combo secreto desbloqueado! Agregá tu link en el código donde dice SECRET_LINK.');
+    }
+  }
+}
+
+function checkWords() {
+  Object.entries(SECRET_WORDS).forEach(([word, coords]) => {
+    if(foundWords.has(word)) return;
+    const allSelected = coords.every(({r,c}) => selected.has(r+'-'+c));
+    if(allSelected) {
+      foundWords.add(word);
+      coords.forEach(({r,c}) => {
+        const key = r+'-'+c;
+        selected.delete(key);
+        const el = document.getElementById('c'+r+'-'+c);
+        el.classList.remove('selected');
+        el.classList.add('found');
+      });
+      document.getElementById('tag-' + word).classList.add('done');
+      if(foundWords.size === Object.keys(SECRET_WORDS).length) {
+        setTimeout(showQR, 500);
+      }
+    }
+  });
+}
+
+function showQR() {
+  const reveal = document.getElementById('qr-reveal');
+  reveal.classList.add('show');
+  if(!qrGenerated) {
+    new QRCode(document.getElementById('qr-container'), {
+      text: SPOTIFY_URL,
+      width: 180, height: 180,
+      colorDark: '#6b2737',
+      colorLight: '#fdf6ee',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+    qrGenerated = true;
+  }
+  reveal.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function clearSelection() {
+  selected.forEach(key => {
+    const [r,c] = key.split('-');
+    const el = document.getElementById('c'+r+'-'+c);
+    el.classList.remove('selected');
+    const wordsUsingCell = cellWords[key] || [];
+    const stillFound = wordsUsingCell.some(w => foundWords.has(w));
+    if(stillFound) el.classList.add('found');
   });
   selected.clear();
 }
-function resetAll(){
-  document.querySelectorAll('.cell').forEach(el=>el.classList.remove('selected','found'));
+
+function resetAll() {
+  document.querySelectorAll('.cell').forEach(el => el.classList.remove('selected','found'));
+  document.querySelectorAll('.word-tag').forEach(t => t.classList.remove('done'));
+  document.getElementById('qr-reveal').classList.remove('show');
+  document.getElementById('qr-container').innerHTML = '';
   selected.clear();
+  foundWords.clear();
+  qrGenerated = false;
 }
 </script>
 </body>
