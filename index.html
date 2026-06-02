@@ -90,7 +90,6 @@ button:hover{background:var(--accent-dim); border-color:var(--rose);}
 <body>
 
 <header>
-  <p class="subtitle">— juego —</p>
   <h1>A ver si no sos tan burra</h1>
 </header>
 
@@ -114,8 +113,8 @@ button:hover{background:var(--accent-dim); border-color:var(--rose);}
 <p class="status">Para el amor de mi vida tini, te amo mucho mi bebita hermosa ♡</p>
 
 <div class="qr-reveal" id="qr-reveal">
-  <div class="qr-title">¡Lo encontraste todo!</div>
-  <div class="qr-sub">Escaneá el QR para tu sorpresa</div>
+  <div class="qr-title">Muy bien sos mas inteligente de lo q pense</div>
+  <div class="qr-sub">Escaneá el QR</div>
   <div id="qr-container"></div>
   <div class="qr-sub">nuestra playlist ♡</div>
 </div>
@@ -123,15 +122,15 @@ button:hover{background:var(--accent-dim); border-color:var(--rose);}
 <script>
 const rows=[
   ['R','K','J','B','Z','C','R','K','F','A'],
-  ['T','P','U','H','C','T','E','K','M','J'],
+  ['T','P','U','H','T','M','E','K','M','J'],
   ['L','Y','S','M','I','L','K','U','U','B'],
   ['T','R','N','K','W','U','H','P','C','V'],
   ['N','R','V','T','I','N','I','E','H','G'],
   ['I','A','Y','D','K','I','V','I','I','F'],
   ['T','H','I','A','G','O','T','I','T','A'],
-  ['S','A','T','R','L','N','O','K','O','D'],
-  ['U','T','O','Y','V','O','L','O','P','A'],
-  ['J','R','A','S','D','E','I','M','E','S']
+  ['S','A','A','R','L','N','O','K','O','D'],
+  ['U','C','T','Y','V','O','L','O','P','A'],
+  ['J','T','A','S','D','E','I','M','E','S']
 ];
 
 const SECRET_WORDS = {
@@ -155,7 +154,7 @@ Object.entries(SECRET_WORDS).forEach(([word, coords]) => {
 
 const SPOTIFY_URL = 'https://open.spotify.com/playlist/6TmOcYD0xY75mfUYM2YrZS?si=9b38faddd25244d1&pt=6f7ff9a47d978b46bd0652dfc3cb5d8e';
 
-// Combo secreto: fila 10 col 2 (R), fila 9 col 3 (O), fila 2 col 5 (C)
+// Combo secreto: fila 10 col 2 (T), fila 9 col 3 (T), fila 2 col 5 (T)
 const SECRET_COMBO = ['9-1', '8-2', '1-4'];
 const SECRET_LINK = 'https://www.youtube.com/?app=desktop&hl=es'; // <-- ponés tu link acá
 

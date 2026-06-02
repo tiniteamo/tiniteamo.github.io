@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Para vos</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --cream:#fdf8f2;
+  --parchment:#f5ede0;
+  --blush:#e8b4b8;
+  --rose:#c0616a;
+  --deep:#6b2737;
+  --deeper:#3d1020;
+  --gold:#c9a96e;
+  --gold-light:#e8d5a3;
+  --ink:#2c1318;
+  --muted:#9a6b72;
+}
+
+html{scroll-behavior:smooth;}
+body{
+  background-color:var(--cream);
+  background-image:
+    radial-gradient(ellipse 90% 50% at 50% -10%, #f0d0d4 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 0% 60%, #ead5c8 0%, transparent 50%),
+    radial-gradient(ellipse 40% 35% at 100% 80%, #f0dde0 0%, transparent 50%);
+  min-height:100vh;
+  font-family:'Cormorant Garamond',serif;
+  color:var(--ink);
+  overflow-x:hidden;
+}
+
+/* grain */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+/* ── COVER ── */
+.cover{
+  position:relative;z-index:1;
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:4rem 2rem;
+  text-align:center;
+  gap:2rem;
+}
+
+.cover-ornament-top{
+  display:flex;align-items:center;gap:1.2rem;width:100%;max-width:400px;
+}
+.cover-ornament-top span{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+
+.cover-tag{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-weight:300;
+  font-size:.8rem;letter-spacing:.4em;
+  color:var(--muted);text-transform:uppercase;
+}
+
+.cover-title{
+  font-family:'Playfair Display',serif;
+  font-weight:400;font-style:italic;
+  font-size:clamp(3rem,10vw,6.5rem);
+  color:var(--deep);
+  line-height:1;
+  text-shadow:0 2px 24px rgba(107,39,55,.12);
+  animation:fadeDown 1.2s ease both;
+}
+
+.cover-subtitle{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:300;font-style:italic;
+  font-size:clamp(1rem,3vw,1.5rem);
+  color:var(--muted);
+  letter-spacing:.12em;
+  animation:fadeDown 1.4s ease both;
+}
+
+.cover-heart{
+  animation:pulse 2.4s ease-in-out infinite;
+  color:var(--rose);
+  font-size:2rem;
+}
+
+.scroll-hint{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:.8rem;letter-spacing:.2em;color:var(--muted);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  animation:fadeIn 2s 1s ease both;
+}
+.scroll-arrow{
+  width:1px;height:40px;
+  background:linear-gradient(to bottom,var(--gold),transparent);
+  animation:scrollDown 1.6s ease-in-out infinite;
+}
+
+/* ── LETTER WRAPPER ── */
+.letter-wrap{
+  position:relative;z-index:1;
+  max-width:780px;margin:0 auto;
+  padding:0 1.5rem 6rem;
+}
+
+/* ── LETTER PAPER ── */
+.paper{
+  background:var(--parchment);
+  border:1px solid rgba(201,169,110,.3);
+  box-shadow:
+    0 0 0 6px rgba(201,169,110,.08),
+    0 1px 2px rgba(107,39,55,.06),
+    0 8px 40px rgba(107,39,55,.1),
+    0 32px 80px rgba(107,39,55,.06);
+  padding:clamp(2.5rem,6vw,5rem) clamp(2rem,6vw,5rem);
+  position:relative;
+  border-radius:2px;
+}
+
+/* paper top ornament */
+.paper-header{
+  text-align:center;
+  margin-bottom:3rem;
+  padding-bottom:2rem;
+  border-bottom:1px solid rgba(201,169,110,.35);
+  position:relative;
+}
+.paper-header::after{
+  content:'❧';
+  position:absolute;bottom:-1rem;left:50%;transform:translateX(-50%);
+  background:var(--parchment);padding:0 .8rem;
+  color:var(--gold);font-size:1.4rem;
+}
+
+.paper-date{
+  font-size:.8rem;letter-spacing:.25em;
+  color:var(--muted);font-style:italic;
+  margin-bottom:1rem;
+}
+
+.paper-title{
+  font-family:'Playfair Display',serif;
+  font-weight:700;font-style:italic;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  color:var(--deep);
+  line-height:1.2;
+}
+
+/* ── LETTER BODY ── */
+.letter-body{
+  font-size:clamp(1.05rem,2.2vw,1.2rem);
+  line-height:1.95;
+  color:var(--ink);
+  font-weight:300;
+}
+
+.letter-body p{
+  margin-bottom:1.8em;
+  opacity:0;
+  transform:translateY(16px);
+  transition:opacity .7s ease, transform .7s ease;
+}
+.letter-body p.visible{opacity:1;transform:translateY(0);}
+
+.letter-body p:first-child::first-letter{
+  font-family:'Playfair Display',serif;
+  font-size:3.8em;
+  line-height:.75;
+  float:left;
+  margin-right:.1em;
+  margin-top:.08em;
+  color:var(--deep);
+  font-style:italic;
+}
+
+/* quotes */
+.quote-block{
+  margin:2.5em 0;
+  padding:1.5em 2em;
+  border-left:2px solid var(--gold);
+  background:rgba(201,169,110,.06);
+  border-radius:0 4px 4px 0;
+  opacity:0;transform:translateX(-12px);
+  transition:opacity .8s ease,transform .8s ease;
+}
+.quote-block.visible{opacity:1;transform:translateX(0);}
+.quote-block p{
+  font-family:'IM Fell English',serif;
+  font-style:italic;font-size:1.15em;
+  color:var(--deep);margin-bottom:.4em !important;
+  opacity:1 !important;transform:none !important;
+}
+.quote-block .quote-src{
+  font-size:.8em;letter-spacing:.15em;
+  color:var(--muted);text-transform:uppercase;
+}
+
+/* highlight inline */
+.hl{color:var(--deep);font-style:italic;font-weight:400;}
+.heart-inline{color:var(--rose);}
+
+/* ── FOOTER ── */
+.paper-footer{
+  margin-top:3.5rem;padding-top:2rem;
+  border-top:1px solid rgba(201,169,110,.35);
+  text-align:right;
+  position:relative;
+}
+.paper-footer::before{
+  content:'✦';
+  position:absolute;top:-1rem;right:2rem;
+  background:var(--parchment);padding:0 .5rem;
+  color:var(--gold);font-size:1rem;
+}
+.sign-off{
+  font-family:'Playfair Display',serif;
+  font-style:italic;font-size:1.5rem;
+  color:var(--deep);display:block;margin-bottom:.3rem;
+}
+.sign-name{
+  font-family:'Playfair Display',serif;
+  font-weight:700;font-size:2rem;
+  color:var(--deep);display:block;
+}
+
+/* corner flourishes */
+.paper::before,.paper::after{
+  content:'';position:absolute;width:28px;height:28px;
+  border-color:var(--gold);border-style:solid;
+}
+.paper::before{top:18px;left:18px;border-width:1.5px 0 0 1.5px;}
+.paper::after{bottom:18px;right:18px;border-width:0 1.5px 1.5px 0;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
+@keyframes scrollDown{0%,100%{opacity:0;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}}
+
+/* ── PETAL DECO (CSS-only floating petals) ── */
+.petals{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.petal{
+  position:absolute;top:-5%;
+  width:8px;height:12px;
+  background:radial-gradient(ellipse at 40% 30%,rgba(232,180,184,.7),rgba(192,97,106,.15));
+  border-radius:50% 50% 50% 0;
+  animation:fall linear infinite;
+  opacity:0;
+}
+@keyframes fall{
+  0%{opacity:0;transform:translateY(0) rotate(0deg);}
+  10%{opacity:.7;}
+  90%{opacity:.4;}
+  100%{opacity:0;transform:translateY(110vh) rotate(360deg);}
+}
+</style>
+</head>
+<body>
+
+<!-- floating petals -->
+<div class="petals" id="petals"></div>
+
+<!-- COVER -->
+<section class="cover">
+  <div class="cover-ornament-top">
+    <span></span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5z"/></svg>
+    <span></span>
+  </div>
+  <p class="cover-tag">una carta para vos</p>
+  <h1 class="cover-title">Para el amor<br>de mi vida</h1>
+  <p class="cover-subtitle">con todo mi corazón</p>
+  <div class="cover-heart">♡</div>
+  <div class="scroll-hint">
+    <span>leer</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- LETTER -->
+<div class="letter-wrap">
+  <div class="paper">
+    <div class="paper-header">
+      <p class="paper-date">2025 &nbsp;·&nbsp; con amor</p>
+      <h2 class="paper-title">Holi mi amor hermosa</h2>
+    </div>
+
+    <div class="letter-body">
+
+      <p>Te quería escribir algo salido completamente de mi corazoncito. Más allá de lo malo que sea escribiendo y de lo mucho que me cuesta redactar cosas que siento, quiero que sepas que no se me ocurren palabras para explicar todo lo que me hacés sentir y la forma en la que me hacés feliz día a día.</p>
+
+      <p>Desde que me despierto y lo primero que hago es mirar el celu para ver si me mandaste un mensaje o para mandarte yo <span class="hl">(porque casi siempre seguís durmiendo, chanchi)</span>, hasta cuando me voy a dormir y desearte buenas noches para que sueñes lindo. Estás presente en cada momento de mi día.</p>
+
+      <p>Pienso en vos constantemente. Pienso en todas las cosas que me gustaría hacer con vos, en los lugares a los que me gustaría llevarte, en los momentos que me gustaría compartir. Pienso en cómo me gustaría que estuvieras conmigo en ciertos momentos, en qué estarás haciendo, en si estás bien. Pero, más que todo, pienso en lo feliz que soy cuando estoy con vos.</p>
+
+      <p>Con vos encontré una sensación de <span class="hl">tranquilidad, paz y confianza completa</span>. Saber que puedo ser yo mismo sin ningún miedo. Sos una de las cosas más lindas que me pasaron en toda mi vida.</p>
+
+      <p>Quiero que sepas que <span class="hl">te elegiría una y mil veces</span>. No importa cuándo, dónde o cómo, siempre voy a volver a elegirte a vos. Nunca me voy a cansar de escucharte, de hablar con vos, de aprender cosas tuyas o de compartir momentos juntos <span class="hl">(dormir juntitos… te extraño mucho mientras estoy escribiendo esto)</span>.</p>
+
+      <div class="quote-block">
+        <p>"After all this time?"</p>
+        <p>"Always."</p>
+        <span class="quote-src">— Snape a Dumbledore, sobre Lily</span>
+      </div>
+
+      <p>Porque si hay algo de lo que estoy seguro, es de que siempre voy a querer que seas parte de mi vida.</p>
+
+      <p>Me mostraste lo que se siente ser amado de verdad. Me ayudaste a sanar heridas de experiencias pasadas de las que no tuviste nada que ver. Sé que vos también pasaste por cosas muy difíciles, y por eso quiero que sepas que voy a hacer todo lo que esté a mi alcance para cuidarte, acompañarte y que nunca tengas que pasar sola otra vez algo que te haga sufrir.</p>
+
+      <div class="quote-block">
+        <p>"You're the reason I believe in love."</p>
+        <span class="quote-src">— Justin Bieber</span>
+      </div>
+
+      <p>También quiero aprovechar para pedirte un perdón enorme por todas las veces que pude haberte hecho sentir mal con algún comentario o alguna actitud. Nunca haría algo a propósito para lastimarte. Si alguna vez me equivoco, es porque sigo aprendiendo, porque todavía cargo algunas cosas de mi pasado o porque simplemente soy un pelotudo que a veces no piensa antes de hablar. Pero nunca porque quiera hacerte daño.</p>
+
+      <p>Gracias por todas las palabras hermosas que me decís, por la paciencia que me tenés, por cómo me tratás y por todo lo que me enseñás todos los días. Vos siempre me decís que te estoy ayudando a sanar algunas cosas y que te gustaría poder pensar como yo en algunas situaciones. Pero <span class="hl">no tenés idea de lo contrario que es para mí</span>.</p>
+
+      <p>Te admiro muchísimo. Admiro tu forma de ver las cosas, tu fuerza, tu sensibilidad, tu manera de querer a las personas que amás <span class="hl">(aunque por ahí te hagas mucho la que no, como hacés con Cata, pobrechita)</span>. Y hasta esas cosas chiquititas que ni cuenta te das me encantan: me encanta cuando me decís <span class="hl">Gotita</span> o <span class="hl">Tomatito Cherry</span>, me encanta ver películas con vos por más que te quedes dormida, me encanta cocinarte para poder demostrar de alguna forma mi amor (no le cocino a absolutamente nadie), me encanta jugar al Roblox con vos aunque seas malísima haciendo los saltos, me encanta salir con vos, me encanta hablar con vos, me encanta ver TikToks con vos, me encanta pasar tiempo acostados al pedo los dos, me encanta engordar comiendo alfajores y chocolates juntos, me encanta que vengas a casa y te quedes 3 días, me encanta ir a tu casa y sentirme amado por toda tu familia.</p>
+
+      <p>Básicamente, <span class="hl">me encanta todo lo que hagas o todo lo que te incluya</span>, ya que hacés que todo sea mucho mejor solo con tu presencia.</p>
+
+      <p>Sos la mujer más hermosa del mundo. No quiero que te quede ninguna duda: nunca pienses cosas feas tuyas. A mí me encantás estés lo arreglada que estés. No hace falta que estés 3 horas arreglándote para verme, ni planchar el pelo para estar juntos <span class="heart-inline">♡</span></p>
+
+      <p>Y si hay algo que quiero que te quede claro después de leer todo esto, es que <span class="hl">sos una de las personas más importantes de mi vida</span>. Y que, pase el tiempo que pase, voy a seguir eligiéndote todos los días.</p>
+
+      <p>Te amo muchísimo, mi amor. Más de lo que pueda decirte con palabras o en una carta o mensaje.</p>
+
+      <div class="quote-block">
+        <p>"Love is the most powerful magic of all."</p>
+        <span class="quote-src">— Albus Dumbledore</span>
+      </div>
+
+    </div>
+
+    <div class="paper-footer">
+      <span class="sign-off">con todo mi amor,</span>
+      <span class="sign-name">Thiago <span class="heart-inline">♡</span></span>
+    </div>
+  </div>
+</div>
+
+<script>
+// petals
+const petals = document.getElementById('petals');
+for(let i = 0; i < 18; i++){
+  const p = document.createElement('div');
+  p.className = 'petal';
+  p.style.left = Math.random()*100 + '%';
+  p.style.animationDuration = (12 + Math.random()*18) + 's';
+  p.style.animationDelay = (Math.random()*20) + 's';
+  p.style.transform = `rotate(${Math.random()*360}deg) scale(${0.6+Math.random()})`;
+  p.style.width = (6+Math.random()*8)+'px';
+  p.style.height = (9+Math.random()*10)+'px';
+  petals.appendChild(p);
+}
+
+// scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.15});
+
+document.querySelectorAll('.letter-body p, .quote-block').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
