@@ -185,16 +185,13 @@ rows.forEach((row,r) => {
 
 function toggle(el, r, c) {
   const key = r+'-'+c;
-  // Si está seleccionada, la desmarcamos (pero mantenemos 'found' si corresponde)
   if(selected.has(key)) {
     selected.delete(key);
     el.classList.remove('selected');
-    // restaurar 'found' si alguna palabra que usa esta celda ya fue encontrada
     const wordsUsingCell = cellWords[key] || [];
     const stillFound = wordsUsingCell.some(w => foundWords.has(w));
     if(stillFound) el.classList.add('found');
   } else {
-    // La marcamos como seleccionada siempre (aunque sea found)
     selected.add(key);
     el.classList.add('selected');
   }
