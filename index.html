@@ -210,11 +210,7 @@ function checkCombo() {
       document.getElementById('c'+r+'-'+c).classList.remove('selected');
       selected.delete(key);
     });
-    if(SECRET_LINK !== 'carta.html') {
-      window.open(SECRET_LINK, '_blank');
-    } else {
-      alert('¡Combo secreto desbloqueado! Agregá tu link en el código donde dice SECRET_LINK.');
-    }
+    window.open(SECRET_LINK, '_blank');
   }
 }
 
