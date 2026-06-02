@@ -156,7 +156,7 @@ const SPOTIFY_URL = 'https://open.spotify.com/playlist/6TmOcYD0xY75mfUYM2YrZS?si
 
 // Combo secreto: fila 10 col 2 (T), fila 9 col 3 (T), fila 2 col 5 (T)
 const SECRET_COMBO = ['9-1', '8-2', '1-4'];
-const SECRET_LINK = 'https://www.youtube.com/?app=desktop&hl=es'; // <-- ponés tu link acá
+const SECRET_LINK = 'carta.html'; // <-- ponés tu link acá
 
 const gridEl = document.getElementById('grid');
 const wordsPanel = document.getElementById('words-panel');
@@ -210,7 +210,7 @@ function checkCombo() {
       document.getElementById('c'+r+'-'+c).classList.remove('selected');
       selected.delete(key);
     });
-    if(SECRET_LINK !== 'REEMPLAZA_ESTE_TEXTO_CON_TU_LINK') {
+    if(SECRET_LINK !== 'carta.html') {
       window.open(SECRET_LINK, '_blank');
     } else {
       alert('¡Combo secreto desbloqueado! Agregá tu link en el código donde dice SECRET_LINK.');
